@@ -3,12 +3,12 @@ using UnityEngine.SceneManagement;
 
 public class CrystalCollection : MonoBehaviour
 {
-    public GameObject crystalsFolder; // Ссылка на папку с кристаллами
-    public GameObject fogFolder;      // Ссылка на папку с туманом
-    public GameObject portalObject;   // Ссылка на объект "Portal"
-    public AudioClip healSound;       // Звук для сбора кристаллов, кроме последнего
-    public AudioClip portalSound;     // Звук для сбора последнего кристалла
-    public string nextSceneName = "Village"; // Название следующей сцены
+    public GameObject crystalsFolder; 
+    public GameObject fogFolder;      
+    public GameObject portalObject;   
+    public AudioClip healSound;       // Sound for collecting crystals, except the last one
+    public AudioClip portalSound;     
+    public string nextSceneName = "Village"; 
 
     private int crystalsCollected = 0;
     private int totalCrystals;
@@ -19,7 +19,6 @@ public class CrystalCollection : MonoBehaviour
         totalCrystals = crystalsFolder.transform.childCount;
         audioSource = GetComponent<AudioSource>();
 
-        // Подпишемся на событие SceneManager.sceneLoaded
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -31,7 +30,7 @@ public class CrystalCollection : MonoBehaviour
         }
         else if (other.CompareTag("Portal") && crystalsCollected == totalCrystals)
         {
-            // Вызывать функцию загрузки сцены с задержкой 1 секунда
+            // Call the scene loading function with a 1-second delay
             Invoke("LoadNextScene", 1f);
         }
     }
@@ -63,22 +62,19 @@ public class CrystalCollection : MonoBehaviour
 
     void LoadNextScene()
     {
-        // Загрузить следующую сцену
         SceneManager.LoadScene(nextSceneName);
     }
 
-    // Метод, который вызывается после загрузки новой сцены
+    // Method that is called after the new scene is loaded
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Проверяем, что загружена целевая сцена
+        // Check if the target scene is loaded
         if (scene.name == nextSceneName)
         {
-            // Воспроизводим звук portalSound
             audioSource.PlayOneShot(portalSound);
         }
     }
 
-    // Отписываемся от события при уничтожении объекта
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
